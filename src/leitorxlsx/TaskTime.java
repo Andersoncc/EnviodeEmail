@@ -86,7 +86,7 @@ public class TaskTime {
                texto.show();
                texto.txtSaida.setLineWrap(true);
                texto.txtSaida.append(cel+"\n");
-               System.out.println(inputdados);
+               System.out.println(Arrays.toString(inputdados));
                      
                 }
             }
