@@ -1,9 +1,8 @@
 package leitorxlsx;
 
 
+import java.util.Date;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import view.Inicial;
@@ -12,12 +11,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+/*---------------------------------------------------*/
+               /*teste groupby*/
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+/*---------------------------------------------------*/
 /**
  *
  * @author Anderson Cardoso
@@ -26,12 +34,9 @@ public class TaskTime {
     public static void main(String[] args) throws InterruptedException, IOException{
     Inicial main = new Inicial();
     main.setVisible(true);
-    
-    
-    
     int index = 0;
    
-    try {
+    try{
         for (int i = 0;i<=1;i++ ){
         Thread.sleep(-0,001);
         main.lblPcn.setText(Integer.toString(i)+"%");
@@ -57,53 +62,60 @@ public class TaskTime {
             //*Cria um workbook com todas as abas da planilha*//
             Workbook workbook = new XSSFWorkbook(file);
             XSSFSheet sh = (XSSFSheet) workbook.getSheetAt(index);
-            int nlinhas = sh.getPhysicalNumberOfRows();
-            int ncolunas = sh.getRow(1).getPhysicalNumberOfCells();
-           
+            //*declarando o arraylist que irá armazenar os dados compilados*//
+            ArrayList<Cartorios> cartorio = new ArrayList();
             //*recupera todas as linhas da planilha*//
             Iterator<Row> rowIterator = sh.iterator();
             //*Varre todas as ilnhas da planilha//*
             while(rowIterator.hasNext()){
                 //*recebe cada linha recuperada*//
                 Row row = rowIterator.next();
+                if (row.getRowNum()==0){
+                continue;
+                }
                 //*retorna todas as células da linha selecionada*//
                 Iterator<Cell> cellIterator = row.iterator();
-                /*List valorcel = new ArrayList();*/
+                /*Monta a tabela virtual da classe cartórios com os dados coletados da planilha*/
+                Cartorios cartorios = new Cartorios();
+                System.out.println(cartorio);
+                cartorios.add(cartorio);
                 while(cellIterator.hasNext()){
                 //*recebe cada celula recuperada*//
-               Cell cel = cellIterator.next();
-               
-               
-              
-               
-                switch(cel.getCellType()){
-                 case Cell.CELL_TYPE_STRING:
-                 break;
-                 
-                 
+                Cell cel = cellIterator.next();
+                switch (cel.getColumnIndex()) {
+                case 0:
+                cartorios.setCartorio(cel.getStringCellValue());
+                break;
+                case 1:
+                cartorios.setData(cel.getDateCellValue());
+                break;
+                case 2:
+                cartorios.setProtocolo(cel.getStringCellValue());
+                break;
+                case 3:
+                cartorios.setCustas(cel.getBooleanCellValue());
+                break;
                 }
-               String [][] inputdados = new String [ncolunas][nlinhas];
+                /*switch(cel.getCellType()){
+                 case Cell.CELL_TYPE_STRING:
+                 break;}*/
                texto.show();
                texto.txtSaida.setLineWrap(true);
                texto.txtSaida.append(cel+"\n");
-               System.out.println(Arrays.toString(inputdados));
-                     
+               System.out.println(cartorios);
+               
+               for (Cartorios compilado : cartorio) {
+               texto.txtSaida.append(compilado.getCartorio());/* + ” – ” + compilado.getData() + ” – ” + compilado.getProtocolo()+ ” – ” + compilado.getCustas());*/
+               } 
+                file.close();
                 }
-            }
+                
+                }
+              }catch (FileNotFoundException e) {
+                e.printStackTrace();}
+        }
             
-            } catch (FileNotFoundException ex) {
-                Logger.getLogger(TaskTime.class.getName()).log(Level.SEVERE, null, ex);
-              }
-        }
-        
-        }
-    }catch (IOException ex) {
-                Logger.getLogger(TaskTime.class.getName()).log(Level.SEVERE, null, ex);
-                }   
-    } 
-}
-
-    
-    
-    
-
+            } 
+        }catch (FileNotFoundException e) {
+                e.printStackTrace();}
+}}
