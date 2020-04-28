@@ -11,6 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import org.apache.poi.ss.usermodel.Cell;
@@ -25,6 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.apache.poi.ss.usermodel.DataFormatter;
 /*---------------------------------------------------*/
 /**
  *
@@ -35,6 +38,7 @@ public class TaskTime {
     Inicial main = new Inicial();
     main.setVisible(true);
     int index = 0;
+    DataFormatter formatter = new DataFormatter();
    
     try{
         for (int i = 0;i<=1;i++ ){
@@ -63,49 +67,50 @@ public class TaskTime {
             Workbook workbook = new XSSFWorkbook(file);
             XSSFSheet sh = (XSSFSheet) workbook.getSheetAt(index);
             //*declarando o arraylist que irá armazenar os dados compilados*//
-            ArrayList<Cartorios> cartorio = new ArrayList();
+            //*ArrayList cartoriosgr = new ArrayList<>();*//
             //*recupera todas as linhas da planilha*//
             Iterator<Row> rowIterator = sh.iterator();
             //*Varre todas as ilnhas da planilha//*
             while(rowIterator.hasNext()){
                 //*recebe cada linha recuperada*//
                 Row row = rowIterator.next();
-                if (row.getRowNum()==0){
-                continue;
-                }
-                //*retorna todas as células da linha selecionada*//
+                if (row.getRowNum()<2){
+                continue;                
+                }                //*retorna todas as células da linha selecionada*//
                 Iterator<Cell> cellIterator = row.iterator();
                 /*Monta a tabela virtual da classe cartórios com os dados coletados da planilha*/
-                Cartorios cartorios = new Cartorios();
-                System.out.println(cartorio);
+                
+                ArrayList<Cartorios> cartorios = new ArrayList<Cartorios>();
+                Cartorios cartorio = new Cartorios();
                 cartorios.add(cartorio);
                 while(cellIterator.hasNext()){
                 //*recebe cada celula recuperada*//
                 Cell cel = cellIterator.next();
                 switch (cel.getColumnIndex()) {
                 case 0:
-                cartorios.setCartorio(cel.getStringCellValue());
+                cartorio.setCartorio(cel.getStringCellValue());
                 break;
                 case 1:
-                cartorios.setData(cel.getDateCellValue());
+                cartorio.setData(cel.getStringCellValue());
                 break;
                 case 2:
-                cartorios.setProtocolo(cel.getStringCellValue());
+                cartorio.setProtocolo((int)cel.getNumericCellValue());
                 break;
                 case 3:
-                cartorios.setCustas(cel.getBooleanCellValue());
+                cartorio.setCustas (cel.getStringCellValue());
                 break;
                 }
+                
                 /*switch(cel.getCellType()){
                  case Cell.CELL_TYPE_STRING:
                  break;}*/
                texto.show();
                texto.txtSaida.setLineWrap(true);
                texto.txtSaida.append(cel+"\n");
-               System.out.println(cartorios);
+               System.out.println(cartorio);
                
-               for (Cartorios compilado : cartorio) {
-               texto.txtSaida.append(compilado.getCartorio());/* + ” – ” + compilado.getData() + ” – ” + compilado.getProtocolo()+ ” – ” + compilado.getCustas());*/
+               for (Cartorios compilado :cartorios) {
+               texto.txtSaida.append(compilado.getCartorio()); /*+ ” – ” + compilado.getData() + ” – ” + compilado.getProtocolo()+ ” – ” + compilado.getCustas());*/
                } 
                 file.close();
                 }
@@ -118,4 +123,6 @@ public class TaskTime {
             } 
         }catch (FileNotFoundException e) {
                 e.printStackTrace();}
-}}
+}
+    
+}
