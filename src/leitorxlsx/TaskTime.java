@@ -81,37 +81,43 @@ public class TaskTime {
                 /*Monta a tabela virtual da classe cartórios com os dados coletados da planilha*/
                 
                 ArrayList<Cartorios> cartorios = new ArrayList<Cartorios>();
+                DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
                 Cartorios cartorio = new Cartorios();
                 cartorios.add(cartorio);
                 while(cellIterator.hasNext()){
                 //*recebe cada celula recuperada*//
                 Cell cel = cellIterator.next();
                 switch (cel.getColumnIndex()) {
-                case 0:
+                case 1:
                 cartorio.setCartorio(cel.getStringCellValue());
                 break;
-                case 1:
-                cartorio.setData(cel.getStringCellValue());
-                break;
                 case 2:
-                cartorio.setProtocolo((int)cel.getNumericCellValue());
+                cartorio.setData(cel.getDateCellValue());
                 break;
                 case 3:
-                cartorio.setCustas (cel.getStringCellValue());
+                cartorio.setProtocolo(cel.getStringCellValue());
+                break;
+                case 4:
+                cartorio.setCustas ((int)cel.getNumericCellValue());
                 break;
                 }
                 
                 /*switch(cel.getCellType()){
                  case Cell.CELL_TYPE_STRING:
                  break;}*/
-               texto.show();
-               texto.txtSaida.setLineWrap(true);
+               
+               
                /*texto.txtSaida.append(cel+"\n");*/
                
                
                for (Cartorios compilado :cartorios) {
-               texto.txtSaida.append(compilado.getCartorio()); /*+ ” – ” + compilado.getData() + ” – ” + compilado.getProtocolo()+ ” – ” + compilado.getCustas());*/
-               System.out.println(cartorios);
+                   texto.show();
+               texto.txtSaida.setLineWrap(true);
+               texto.txtSaida.append(compilado.getCartorio()+"\n"
+               + compilado.getData()+"\n"
+               /*+ compilado.getProtocolo()+"\n"*/
+               +compilado.getCustas()+"\n");
+               
                } 
                 file.close();
                 }
