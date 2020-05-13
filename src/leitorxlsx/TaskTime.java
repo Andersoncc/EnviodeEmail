@@ -106,11 +106,12 @@ public class TaskTime {
                  break;}*/
                texto.show();
                texto.txtSaida.setLineWrap(true);
-               texto.txtSaida.append(cel+"\n");
-               System.out.println(cartorio);
+               /*texto.txtSaida.append(cel+"\n");*/
+               
                
                for (Cartorios compilado :cartorios) {
                texto.txtSaida.append(compilado.getCartorio()); /*+ ” – ” + compilado.getData() + ” – ” + compilado.getProtocolo()+ ” – ” + compilado.getCustas());*/
+               System.out.println(cartorios);
                } 
                 file.close();
                 }
